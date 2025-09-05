@@ -1,0 +1,1 @@
+def sql_panel(sql): pass

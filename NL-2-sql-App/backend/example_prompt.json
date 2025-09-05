@@ -1,0 +1,141 @@
+{
+  "task": {
+    "objective": "Generate a SQLite SQL query",
+    "input_query": "Show me high-value customers who have made transactions over $5000 in the last month",
+    "context": "Banking database query generation",
+    "output_format": {
+      "type": "json",
+      "structure": {
+        "SQLQuery": "The executable SQL query that fulfills the request",
+        "Suggestion": "A natural language description of what the SQL query does"
+      },
+      "example_output": {
+        "SQLQuery": "SELECT c.first_name || ' ' || c.last_name AS customer_name, SUM(t.amount) as total_value FROM customers c JOIN accounts a ON c.id = a.customer_id JOIN transactions t ON a.id = t.account_id WHERE t.transaction_date >= date('now', '-1 month') GROUP BY c.id HAVING total_value > 5000 ORDER BY total_value DESC;",
+        "Suggestion": "This query identifies customers with high-value transactions (>$5000) in the past month, showing their names and total transaction value. It joins customers through their accounts to transactions, filters by date, and groups results by customer."
+      }
+    }
+  },
+  "schema_context": {
+    "tables": {
+      "customers": {
+        "description": "Stores customer information",
+        "columns": {
+          "id": {
+            "type": "TEXT",
+            "constraints": ["PRIMARY KEY"],
+            "pattern": "CUST[A-Z0-9]{10}"
+          },
+          "first_name": {
+            "type": "TEXT",
+            "constraints": ["NOT NULL"]
+          },
+          "last_name": {
+            "type": "TEXT",
+            "constraints": ["NOT NULL"]
+          }
+        }
+      },
+      "accounts": {
+        "description": "Bank account information",
+        "columns": {
+          "id": {
+            "type": "TEXT",
+            "constraints": ["PRIMARY KEY"],
+            "pattern": "ACC[A-Z0-9]{10}"
+          },
+          "type": {
+            "type": "TEXT",
+            "constraints": ["NOT NULL"],
+            "valid_values": ["checking", "savings", "credit", "loan"]
+          },
+          "status": {
+            "type": "TEXT",
+            "constraints": ["DEFAULT 'active'"],
+            "valid_values": ["active", "inactive", "suspended", "closed"]
+          }
+        }
+      },
+      "transactions": {
+        "description": "Records of account transactions",
+        "columns": {
+          "amount": {
+            "type": "REAL",
+            "constraints": ["NOT NULL"]
+          },
+          "transaction_date": {
+            "type": "TIMESTAMP",
+            "constraints": ["DEFAULT CURRENT_TIMESTAMP"]
+          },
+          "type": {
+            "type": "TEXT",
+            "constraints": ["NOT NULL"],
+            "valid_values": ["deposit", "withdrawal", "transfer", "payment", "fee", "interest"]
+          }
+        }
+      }
+    },
+    "relationships": [
+      {"from": "accounts.customer_id", "to": "customers.id"},
+      {"from": "transactions.account_id", "to": "accounts.id"}
+    ]
+  },
+  "reasoning": {
+    "analysis_steps": [
+      "1. Tables needed: customers (customer details), accounts (link to transactions), transactions (amount and date)",
+      "2. Join path: customers → accounts → transactions",
+      "3. Conditions needed: transaction_date >= 1 month ago, amount aggregation > 5000",
+      "4. Group by customer to sum transaction amounts",
+      "5. Order by total amount for meaningful presentation"
+    ],
+    "detected_capabilities": ["aggregate", "date_filter", "join", "group"],
+    "required_tables": ["customers", "accounts", "transactions"]
+  },
+  "examples": [
+    {
+      "natural_language": "Find customers who have both checking and savings accounts.",
+      "output": {
+        "SQLQuery": "SELECT DISTINCT c.first_name || ' ' || c.last_name AS customer_name, c.email, c.phone FROM customers c JOIN accounts a1 ON c.id = a1.customer_id AND a1.type = 'checking' AND a1.status = 'active' JOIN accounts a2 ON c.id = a2.customer_id AND a2.type = 'savings' AND a2.status = 'active' ORDER BY customer_name;",
+        "Suggestion": "This query finds customers with both checking and savings accounts by joining the customers table twice with the accounts table. It only considers active accounts and returns customer details ordered by name."
+      },
+      "reasoning": [
+        "1. Start with customers table for personal info",
+        "2. Need two joins to accounts (a1, a2) to check both account types",
+        "3. Filter for active accounts only",
+        "4. Use DISTINCT to avoid duplicates",
+        "5. Concatenate first and last names for readability"
+      ],
+      "key_elements": {
+        "tables": ["customers", "accounts"],
+        "key_columns": ["customers.id", "accounts.customer_id", "accounts.type", "accounts.status"],
+        "conditions": ["a1.type = 'checking'", "a2.type = 'savings'", "status = 'active'"]
+      }
+    }
+  ],
+  "requirements": {
+    "output_format": [
+      "Return a JSON object with exactly two keys: 'SQLQuery' and 'Suggestion'",
+      "SQLQuery must contain only the executable SQL query",
+      "Suggestion must provide a clear description of the query's purpose and behavior"
+    ],
+    "syntax": [
+      "Use SQLite syntax (e.g., || for string concatenation)",
+      "Use proper table aliases (e.g., 'customers c')",
+      "Include appropriate JOINs based on foreign key relationships"
+    ],
+    "data_handling": [
+      "Add WHERE conditions for status='active' when relevant",
+      "Use proper column names as defined in the schema",
+      "Handle NULL values appropriately"
+    ],
+    "output": [
+      "Return only the requested information",
+      "Add ORDER BY for better readability",
+      "Use meaningful column aliases"
+    ],
+    "constraints": [
+      "Respect column value domains as specified in schema",
+      "Follow foreign key relationships",
+      "No data modification commands"
+    ]
+  }
+}

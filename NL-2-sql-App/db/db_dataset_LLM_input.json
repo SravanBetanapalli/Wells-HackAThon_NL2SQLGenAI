@@ -1,0 +1,383 @@
+{
+  "tables": {
+    "branches": {
+      "description": "Contains information about bank branches",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "required": true,
+          "pattern": "BR[A-Z0-9]{10}",
+          "sample_values": ["BRXAJI0Y6DPB", "BRSAHXTHV3A3", "BRMF8MDD4V30"]
+        },
+        "name": {
+          "type": "TEXT",
+          "required": true,
+          "distinct_values": [
+            "Main Branch 1", "Main Branch 21", "Main Branch 43",
+            "Downtown Branch 1", "Downtown Branch 26", "Downtown Branch 31", "Downtown Branch 40",
+            "North Branch 1", "North Branch 24", "North Branch 28",
+            "South Branch 1", "South Branch 15", "South Branch 18", "South Branch 27", "South Branch 34", "South Branch 36",
+            "East Branch 1", "East Branch 17", "East Branch 23", "East Branch 44",
+            "West Branch 1", "West Branch 22", "West Branch 35",
+            "Airport Branch 1", "Airport Branch 33",
+            "Mall Branch 1", "Mall Branch 39", "Mall Branch 41", "Mall Branch 42",
+            "University Branch 1", "University Branch 37",
+            "Corporate Branch 1", "Corporate Branch 25", "Corporate Branch 29", "Corporate Branch 38", "Corporate Branch 45",
+            "Suburban Branch 1",
+            "Financial District Branch 1", "Financial District Branch 19",
+            "Residential Branch 1", "Residential Branch 32", "Residential Branch 46",
+            "Commercial Branch 1", "Commercial Branch 16", "Commercial Branch 20"
+          ]
+        },
+        "address": {
+          "type": "TEXT",
+          "required": false,
+          "sample_values": ["43321 Brittany Bypass", "908 Jennifer Squares", "402 Peterson Drives Apt. 511"]
+        },
+        "city": {
+          "type": "TEXT",
+          "required": false,
+          "distinct_values": [
+            "Houston", "Jacksonville", "Dallas", "Phoenix", "Los Angeles", "Columbus", 
+            "Chicago", "Fort Worth", "New York", "Indianapolis", "San Diego", "San Jose", "Austin", "San Antonio"
+          ]
+        },
+        "state": {
+          "type": "TEXT",
+          "required": false,
+          "distinct_values": [
+            "TX", "FL", "CA", "IL", "NY", "AZ", "OH", "IN", "PA"
+          ]
+        },
+        "zip_code": {
+          "type": "TEXT",
+          "required": false,
+          "pattern": "[0-9]{5}",
+          "sample_values": ["04406", "71927", "50298"]
+        },
+        "manager_id": {
+          "type": "TEXT",
+          "required": false,
+          "foreign_key": "employees.id",
+          "pattern": "EMP[A-Z0-9]{10}",
+          "sample_values": ["EMPHJB2JTXB02", "EMP39E3NWXUJ3", "EMPJ9WRSB4GF1"]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2021-04-26 07:56:55", "2024-02-02 15:11:24", "2021-05-05 17:13:15"]
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-10-02 02:25:07", "2024-10-02 19:13:13", "2024-11-25 14:29:43"]
+        }
+      }
+    },
+    "customers": {
+      "description": "Stores customer information",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "required": true,
+          "pattern": "CUST[A-Z0-9]{10}",
+          "sample_values": ["CUSTYKMUY2BIAD", "CUSTXJ6HQJG5HE"]
+        },
+        "email": {
+          "type": "TEXT",
+          "required": true,
+          "unique": true,
+          "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+          "sample_values": ["john.doe@email.com", "jane.smith@email.com", "mike.jones@email.com"]
+        },
+        "phone": {
+          "type": "TEXT",
+          "required": false,
+          "pattern": "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}",
+          "sample_values": ["(555) 123-4567", "(555) 987-6543", "(555) 555-0123"]
+        },
+        "address": {
+          "type": "TEXT",
+          "required": false,
+          "sample_values": ["123 Main St", "456 Oak Ave", "789 Pine Rd"]
+        },
+        "first_name": {
+          "type": "TEXT",
+          "required": true,
+          "sample_values": ["John", "Jane", "Mike", "Sarah", "David", "Lisa"]
+        },
+        "last_name": {
+          "type": "TEXT",
+          "required": true,
+          "sample_values": ["Doe", "Smith", "Jones", "Johnson", "Williams", "Brown"]
+        },
+        "date_of_birth": {
+          "type": "DATE",
+          "required": false,
+          "sample_values": ["1980-01-15", "1992-06-23", "1975-12-03"]
+        },
+        "gender": {
+          "type": "TEXT",
+          "required": false,
+          "distinct_values": ["M", "F", "Other", "Prefer not to say"]
+        },
+        "national_id": {
+          "type": "TEXT",
+          "required": false,
+          "unique": true,
+          "pattern": "[0-9]{3}-[0-9]{2}-[0-9]{4}",
+          "sample_values": ["123-45-6789", "987-65-4321", "555-12-3456"]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2021-04-26 07:56:55", "2024-02-02 15:11:24", "2021-05-05 17:13:15"]
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-10-02 02:25:07", "2024-10-02 19:13:13", "2024-11-25 14:29:43"]
+        },
+        "branch_id": {
+          "type": "TEXT",
+          "required": false,
+          "foreign_key": "branches.id",
+          "pattern": "BR[A-Z0-9]{10}",
+          "sample_values": ["BRXAJI0Y6DPB", "BRSAHXTHV3A3", "BRMF8MDD4V30"]
+        }
+      }
+    },
+    "employees": {
+      "description": "Contains employee records",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "required": true,
+          "pattern": "EMP[A-Z0-9]{10}",
+          "sample_values": ["EMPB4GH2M5ZJA", "EMPOTIRZQAKOI"]
+        },
+        "branch_id": {
+          "type": "TEXT",
+          "required": true,
+          "foreign_key": "branches.id",
+          "pattern": "BR[A-Z0-9]{10}",
+          "sample_values": ["BRXAJI0Y6DPB", "BRSAHXTHV3A3", "BRMF8MDD4V30"]
+        },
+        "name": {
+          "type": "TEXT",
+          "required": true,
+          "sample_values": ["John Smith", "Jane Doe", "Mike Johnson", "Sarah Williams"]
+        },
+        "email": {
+          "type": "TEXT",
+          "required": true,
+          "unique": true,
+          "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+          "sample_values": ["john.smith@bank.com", "jane.doe@bank.com", "mike.johnson@bank.com"]
+        },
+        "phone": {
+          "type": "TEXT",
+          "required": false,
+          "pattern": "\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}",
+          "sample_values": ["(555) 123-4567", "(555) 987-6543", "(555) 555-0123"]
+        },
+        "position": {
+          "type": "TEXT",
+          "required": false,
+          "distinct_values": [
+            "Branch Manager",
+            "Assistant Manager",
+            "Manager",
+            "Senior Teller",
+            "Teller",
+            "Loan Officer",
+            "Credit Analyst",
+            "Financial Advisor",
+            "Customer Service Representative",
+            "Operations Specialist",
+            "Security Officer",
+            "IT Support"
+          ]
+        },
+        "hire_date": {
+          "type": "DATE",
+          "required": false,
+          "sample_values": ["2020-01-15", "2019-06-23", "2021-12-03"]
+        },
+        "salary": {
+          "type": "REAL",
+          "required": false,
+          "sample_values": [50000.0, 75000.0, 60000.0, 45000.0]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2021-04-26 07:56:55", "2024-02-02 15:11:24", "2021-05-05 17:13:15"]
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-10-02 02:25:07", "2024-10-02 19:13:13", "2024-11-25 14:29:43"]
+        }
+      }
+    },
+    "accounts": {
+      "description": "Bank account information",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "required": true,
+          "pattern": "ACC[A-Z0-9]{10}",
+          "sample_values": ["ACC7DDM6J9LXG", "ACCKIDNFE9O1X"]
+        },
+        "customer_id": {
+          "type": "TEXT",
+          "required": true,
+          "foreign_key": "customers.id",
+          "pattern": "CUST[A-Z0-9]{10}",
+          "sample_values": ["CUSTYKMUY2BIAD", "CUSTXJ6HQJG5HE"]
+        },
+        "account_number": {
+          "type": "TEXT",
+          "required": true,
+          "unique": true,
+          "pattern": "[0-9]{10,12}",
+          "sample_values": ["1234567890", "9876543210", "5555123456"]
+        },
+        "type": {
+          "type": "TEXT",
+          "required": true,
+          "distinct_values": ["checking", "savings", "credit", "loan"]
+        },
+        "balance": {
+          "type": "REAL",
+          "required": false,
+          "default": 0.00,
+          "sample_values": [1000.0, 2500.50, 0.0, 15000.0]
+        },
+        "opened_at": {
+          "type": "DATE",
+          "required": true,
+          "sample_values": ["2020-01-15", "2019-06-23", "2021-12-03"]
+        },
+        "interest_rate": {
+          "type": "REAL",
+          "required": false,
+          "sample_values": [0.01, 0.025, 0.005, 0.15]
+        },
+        "status": {
+          "type": "TEXT",
+          "required": false,
+          "default": "active",
+          "distinct_values": ["active", "inactive", "suspended", "closed"]
+        },
+        "branch_id": {
+          "type": "TEXT",
+          "required": false,
+          "foreign_key": "branches.id",
+          "pattern": "BR[A-Z0-9]{10}",
+          "sample_values": ["BRXAJI0Y6DPB", "BRSAHXTHV3A3", "BRMF8MDD4V30"]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2021-04-26 07:56:55", "2024-02-02 15:11:24", "2021-05-05 17:13:15"]
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-10-02 02:25:07", "2024-10-02 19:13:13", "2024-11-25 14:29:43"]
+        }
+      }
+    },
+    "transactions": {
+      "description": "Records of account transactions",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "required": true,
+          "pattern": "TXN[A-Z0-9]{10}",
+          "sample_values": ["TXNB4GH2M5ZJA", "TXNOTIRZQAKOI"]
+        },
+        "account_id": {
+          "type": "TEXT",
+          "required": true,
+          "foreign_key": "accounts.id",
+          "pattern": "ACC[A-Z0-9]{10}",
+          "sample_values": ["ACC7DDM6J9LXG", "ACCKIDNFE9O1X"]
+        },
+        "transaction_date": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-01-15 10:30:00", "2024-02-20 14:45:30", "2024-03-10 09:15:22"]
+        },
+        "amount": {
+          "type": "REAL",
+          "required": true,
+          "sample_values": [100.0, 250.50, 1000.0, 50.25]
+        },
+        "type": {
+          "type": "TEXT",
+          "required": true,
+          "distinct_values": [
+            "deposit",
+            "withdrawal",
+            "transfer",
+            "payment",
+            "fee",
+            "interest"
+          ]
+        },
+        "description": {
+          "type": "TEXT",
+          "required": false,
+          "sample_values": ["ATM Deposit", "Online Transfer", "Bill Payment", "Account Fee"]
+        },
+        "status": {
+          "type": "TEXT",
+          "required": false,
+          "default": "completed",
+          "distinct_values": [
+            "pending",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2021-04-26 07:56:55", "2024-02-02 15:11:24", "2021-05-05 17:13:15"]
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "required": false,
+          "default": "CURRENT_TIMESTAMP",
+          "sample_values": ["2024-10-02 02:25:07", "2024-10-02 19:13:13", "2024-11-25 14:29:43"]
+        },
+        "employee_id": {
+          "type": "TEXT",
+          "required": false,
+          "foreign_key": "employees.id",
+          "pattern": "EMP[A-Z0-9]{10}",
+          "sample_values": ["EMPB4GH2M5ZJA", "EMPOTIRZQAKOI"]
+        }
+      }
+    }
+  }
+}

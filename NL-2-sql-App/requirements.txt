@@ -1,0 +1,9 @@
+
+streamlit
+chromadb
+pydantic
+sqlparse
+python-dotenv
+pandas
+pytest
+llama-cpp-python
